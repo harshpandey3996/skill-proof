@@ -16,42 +16,42 @@ function Signup({ setLogin, setUser }) {
   useEffect(() => {
     const container = rippleRef.current;
     if (!container) return;
-  
+
     let lastX = 0;
     let lastY = 0;
     let lastTime = 0;
-  
+
     const createWater = (x, y, speed) => {
       const drop = document.createElement("span");
-  
+
       const size = Math.min(140, 60 + speed * 1.8);
-  
+
       drop.style.width = `${size}px`;
       drop.style.height = `${size}px`;
       drop.style.left = `${x - size / 2}px`;
       drop.style.top = `${y - size / 2}px`;
-  
+
       drop.className = "water-drop";
-  
+
       container.appendChild(drop);
       setTimeout(() => drop.remove(), 1200);
     };
-  
+
     const handleMove = (e) => {
       const now = Date.now();
       const dt = now - lastTime || 16;
-  
+
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       const speed = Math.sqrt(dx * dx + dy * dy) / dt * 20;
-  
+
       createWater(e.clientX, e.clientY, speed);
-  
+
       lastX = e.clientX;
       lastY = e.clientY;
       lastTime = now;
     };
-  
+
     window.addEventListener("mousemove", handleMove);
     return () => window.removeEventListener("mousemove", handleMove);
   }, []);
@@ -80,12 +80,13 @@ function Signup({ setLogin, setUser }) {
     if (!validate()) return alert("Fill all required fields");
 
     try {
-      const res = await axios.post("http://localhost:8000/api/post", {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/post`, {
         name,
         email,
         password,
         confirmpassword,
       });
+
 
       alert("User Registered Successfully!");
       setLogin(true);
@@ -139,14 +140,12 @@ function Signup({ setLogin, setUser }) {
                 }}
                 className={`mt-1 w-full rounded-lg p-3 bg-black/40
                   text-white placeholder-gray-400 border
-                  ${
-                    errors[key] ? "border-red-500" : "border-white/20"
+                  ${errors[key] ? "border-red-500" : "border-white/20"
                   }
                   focus:outline-none focus:ring-2
-                  ${
-                    errors[key]
-                      ? "focus:ring-red-500"
-                      : "focus:ring-green-400"
+                  ${errors[key]
+                    ? "focus:ring-red-500"
+                    : "focus:ring-green-400"
                   }`}
               />
             </div>
