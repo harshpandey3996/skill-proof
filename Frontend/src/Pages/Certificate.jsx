@@ -14,7 +14,7 @@ export default function Certificate() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const certificateType = location.state?.type || "frontend";
+  const certificateType = location.state?.type || "webdev";
   const certificateLevel = location.state?.level || "beginner";
 
   const testNameMap = {
@@ -37,129 +37,187 @@ export default function Certificate() {
   const { stars, label } = levelConfig[certificateLevel];
   const renderStars = () => "⭐".repeat(stars);
 
-const downloadCertificate = async () => {
-  if (!certificateRef.current) return;
+  const downloadCertificate = async () => {
+    if (!certificateRef.current) return;
 
-  try {
     const canvas = await html2canvas(certificateRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
+      scale: 3,
       useCORS: true,
-      scrollY: -window.scrollY,
-
-      onclone: (doc) => {
-        doc.querySelectorAll("*").forEach((el) => {
-          const style = doc.defaultView.getComputedStyle(el);
-          if (style.color?.includes("oklch")) el.style.color = "#000";
-          if (style.backgroundColor?.includes("oklch"))
-            el.style.backgroundColor = "#fff";
-          if (style.borderColor?.includes("oklch"))
-            el.style.borderColor = "#f59e0b";
-          el.style.boxShadow = "none";
-          el.style.filter = "none";
-        });
-      },
+      backgroundColor: "#ffffff",
+      width: 794,
+      height: 1123,
+      windowWidth: 794,
+      windowHeight: 1123,
     });
 
     const imgData = canvas.toDataURL("image/png");
 
     const pdf = new jsPDF("portrait", "mm", "a4");
-
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pageWidth - 20; // margins
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    const x = 10;
-    const y = (pageHeight - imgHeight) / 2;
-
-    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight);
+    pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
     pdf.save("certificate.pdf");
-
-    // ✅ SUCCESS ALERT
-    alert("Your certificate has been downloaded successfully 🎉");
-  } catch (error) {
-    console.error("Certificate download failed:", error);
-
-    // ⚠ ERROR ALERT
-    alert(
-      "Something went wrong while downloading the certificate. Please try again!"
-    );
-  }
-};
+  };
 
   return (
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-slate-900 flex justify-center items-center px-3 py-6">
-        <div
-          ref={certificateRef}
-          className="w-full max-w-md sm:max-w-4xl bg-white rounded-3xl border-8 border-amber-400 p-4 sm:p-10 text-center overflow-hidden"
-        >
-          <p className="tracking-widest text-amber-600 font-bold text-xs sm:text-sm">
-            SKILL PROOF
-          </p>
+      {/* INLINE CSS */}
+      <style>{`
+        .certificate-wrapper {
+          display: flex;
+          justify-content: center;
+          padding: 20px;
+          background: #0f172a;
+          overflow-x: auto;
+        }
 
-          <h1 className="text-xl sm:text-4xl font-bold text-black mt-2">
-            Certificate of Excellence
-          </h1>
+        .certificate-a4 {
+          width: 794px;
+          height: 1123px;
+          background: white;
+          border-radius: 24px;
+          border: 10px solid #f59e0b;
+          padding: 48px;
+          box-sizing: border-box;
+          text-align: center;
 
-          <p className="uppercase text-[10px] sm:text-xs tracking-widest text-gray-600 mt-3">
-            This is proudly presented to
-          </p>
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between; /* 🔥 bottom space fix */
+        }
 
-          <h2 className="mt-3 text-lg sm:text-3xl font-semibold text-black">
-            {user?.name || "Student Name"}
-          </h2>
+        @media (max-width: 768px) {
+          .certificate-a4 {
+            transform: scale(0.48);
+            transform-origin: top center;
+          }
+        }
 
-          <div className="text-lg sm:text-2xl mt-2">{renderStars()}</div>
+        .subtitle {
+          letter-spacing: 4px;
+          color: #d97706;
+          font-weight: bold;
+          font-size: 14px;
+        }
 
-          <p className="font-semibold text-gray-700 text-sm sm:text-base">
-            {label}
-          </p>
+        .title {
+          font-size: 36px;
+          font-weight: 800;
+          margin-top: 8px;
+        }
 
-          <p className="mt-4 sm:mt-6 text-sm sm:text-lg">
-            For successfully completing the
-          </p>
+        .name {
+          font-size: 32px;
+          font-weight: 700;
+          margin-top: 160px;
+        }
 
-          <p className="text-base sm:text-2xl font-bold text-blue-700">
-            {testName}
-          </p>
+        .test {
+          font-size: 26px;
+          font-weight: 700;
+          color: #1d4ed8;
+          margin-top: 10px;
+        }
 
-          <div className="mt-10 flex flex-col sm:flex-row justify-between gap-8 text-black text-sm">
-            <div className="text-center sm:text-left">
-              <img src={sign1} className="w-20 mx-auto sm:mx-0" />
-              <p className="font-bold mt-2">Harsh Pandey</p>
-              <p className="text-xs">CEO, Skill Proof</p>
+        .signatures {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 70px; /* 🔥 reduced */
+        }
+
+        .signatures img {
+          width: 120px;
+        }
+
+        .sign-name {
+          font-weight: bold;
+          margin-top: 8px;
+        }
+
+        .footer-btns {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          padding-bottom: 30px;
+        }
+
+        .btn {
+          padding: 14px 22px;
+          border-radius: 12px;
+          color: white;
+          font-weight: bold;
+          border: none;
+          cursor: pointer;
+        }
+
+        .btn-download {
+          background: #16a34a;
+        }
+
+        .btn-home {
+          background: #2563eb;
+        }
+      `}</style>
+
+      <div className="certificate-wrapper">
+        <div ref={certificateRef} className="certificate-a4">
+          
+          {/* TOP */}
+          <div>
+            <div className="subtitle">SKILL PROOF</div>
+            <div className="title">Certificate of Excellence</div>
+
+            <p style={{ marginTop: "18px", letterSpacing: "3px" }}>
+              THIS IS PROUDLY PRESENTED TO
+            </p>
+
+            <div className="name ">
+              {user?.name || "Student Name"}
             </div>
 
-            <div className="text-center sm:text-right">
-              <img src={sign2} className="w-24 mx-auto sm:ml-auto" />
-              <p className="font-bold mt-2">Ayush Mishra</p>
-              <p className="text-xs">Shareholder / Owner</p>
+            <div style={{ fontSize: "26px", marginTop: "8px" }}>
+              {renderStars()}
+            </div>
+
+            <p style={{ fontWeight: "600" }}>{label}</p>
+
+            <p style={{ marginTop: "22px", fontSize: "18px" }}>
+              For successfully completing the
+            </p>
+
+            <div className="test">{testName}</div>
+          </div>
+
+          {/* MIDDLE */}
+          <div className="signatures">
+            <div>
+              <img src={sign1} alt="CEO Signature" />
+              <div className="sign-name">Harsh Pandey</div>
+              <div style={{ fontSize: "12px" }}>CEO, Skill Proof</div>
+            </div>
+
+            <div style={{ textAlign: "right" }}>
+              <img src={sign2} alt="Owner Signature" />
+              <div className="sign-name">Ayush Mishra</div>
+              <div style={{ fontSize: "12px" }}>
+                Shareholder / Owner
+              </div>
             </div>
           </div>
 
-          <p className="mt-8 text-xs text-black">
+          {/* BOTTOM */}
+          <p style={{ fontSize: "12px", marginTop: "20px" }}>
             Issued on: {new Date().toDateString()}
           </p>
         </div>
       </div>
 
-      <div className="flex justify-center gap-3 pb-6">
-        <button
-          onClick={downloadCertificate}
-          className="px-5 py-3 rounded-xl bg-green-600 font-bold text-white"
-        >
+      <div className="footer-btns">
+        <button className="btn btn-download" onClick={downloadCertificate}>
           Download Certificate
         </button>
 
-        <button
-          onClick={() => navigate("/")}
-          className="px-5 py-3 rounded-xl bg-blue-600 font-bold text-white"
-        >
+        <button className="btn btn-home" onClick={() => navigate("/")}>
           Go Home
         </button>
       </div>
