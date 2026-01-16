@@ -54,10 +54,11 @@ function Login({ setLogin, setUser }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8000/api/login", {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
         email,
         password,
       });
+
 
       if (res.status === 200) {
         alert("Login successful!");
