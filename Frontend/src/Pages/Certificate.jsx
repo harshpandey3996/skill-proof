@@ -4,8 +4,8 @@ import html2canvas from "html2canvas";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import sign1 from "../assets/pandey.png";
-import sign2 from "../assets/mishra.png";
+import sign1 from "../assets/Pandey.png";
+import sign2 from "../assets/Mishra.png";
 
 export default function Certificate() {
   const navigate = useNavigate();
