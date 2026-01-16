@@ -37,108 +37,150 @@ export default function Certificate() {
   const { stars, label } = levelConfig[certificateLevel];
   const renderStars = () => "⭐".repeat(stars);
 
+  // 🔥 TAILWIND v4 SAFE PDF GENERATION
   const downloadCertificate = async () => {
-    if (!certificateRef.current) return;
+  if (!certificateRef.current) return;
 
-    const canvas = await html2canvas(certificateRef.current, {
-      scale: 2,
-      backgroundColor: "#ffffff",
-      useCORS: true,
-    });
+  const canvas = await html2canvas(certificateRef.current, {
+    scale: 2,
+    backgroundColor: "#ffffff",
+    useCORS: true,
 
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("landscape", "px", "a4");
+    // 🔥 THIS IS THE REAL FIX
+    onclone: (clonedDoc) => {
+      const all = clonedDoc.querySelectorAll("*");
 
-    const w = pdf.internal.pageSize.getWidth();
-    const h = pdf.internal.pageSize.getHeight();
+      all.forEach((el) => {
+        const style = clonedDoc.defaultView.getComputedStyle(el);
 
-    pdf.addImage(imgData, "PNG", 0, 0, w, h);
-    pdf.save(`${user?.name || "Student"}_${testName}_${label}.pdf`);
-  };
+        // color
+        if (style.color.includes("oklch")) {
+          el.style.color = "#000000";
+        }
+
+        // background
+        if (style.backgroundColor.includes("oklch")) {
+          el.style.backgroundColor = "#ffffff";
+        }
+
+        // border
+        if (style.borderColor.includes("oklch")) {
+          el.style.borderColor = "#fbbf24";
+        }
+
+        el.style.boxShadow = "none";
+        el.style.filter = "none";
+      });
+
+      // 🔒 BODY SAFE
+      clonedDoc.body.style.background = "#ffffff";
+      clonedDoc.body.style.color = "#000000";
+    },
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+  const pdf = new jsPDF("portrait", "px", "a4");
+
+  const w = pdf.internal.pageSize.getWidth();
+  const h = (canvas.height * w) / canvas.width;
+
+  pdf.addImage(imgData, "PNG", 0, 0, w, h);
+  pdf.save("certificate.pdf");
+};
 
   return (
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-800 to-slate-950 flex justify-center items-center px-4 py-10">
+      {/* UI = Tailwind (allowed) */}
+      <div className="min-h-screen bg-slate-900 flex justify-center items-center px-3 py-6">
         <div
           ref={certificateRef}
-          className="w-full max-w-4xl bg-white rounded-3xl border-[8px] border-amber-400 p-6 sm:p-10 text-center shadow-2xl"
+          className="w-full max-w-md sm:max-w-4xl bg-white rounded-2xl sm:rounded-3xl border-[6px] sm:border-[8px] border-amber-400 p-4 sm:p-10 text-center"
         >
           <p className="tracking-widest text-amber-600 font-bold text-xs sm:text-sm">
             SKILL PROOF
           </p>
 
-          <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-2">
+          <h1 className="text-xl sm:text-4xl font-bold text-black mt-2">
             Certificate of Excellence
           </h1>
 
-          <p className="uppercase text-[10px] sm:text-xs tracking-widest text-gray-500 mt-3">
+          <p className="uppercase text-[10px] sm:text-xs tracking-widest text-gray-600 mt-3">
             This is proudly presented to
           </p>
 
-          <h2 className="mt-4 text-xl sm:text-3xl font-semibold text-slate-950">
+          <h2 className="mt-3 text-lg sm:text-3xl font-semibold text-black break-words">
             {user?.name || "Student Name"}
           </h2>
 
           <div className="text-lg sm:text-2xl mt-2">{renderStars()}</div>
-          <p className="font-semibold text-gray-600 text-sm sm:text-base">
+
+          <p className="font-semibold text-gray-700 text-sm sm:text-base">
             {label}
           </p>
 
-          <p className="mt-6 text-sm sm:text-lg">
+          <p className="mt-4 sm:mt-6 text-sm sm:text-lg">
             For successfully completing the
           </p>
 
-          <p className="text-lg sm:text-2xl font-bold text-blue-700">
+          <p className="text-base sm:text-2xl font-bold text-blue-700 break-words px-2">
             {testName}
           </p>
 
           {/* FOOTER */}
-          <div className="mt-10 flex flex-col sm:flex-row justify-between gap-6 text-sm text-gray-700">
-            <div className="text-center sm:text-left">
-              
-              
-              <p className="sm:mt-19 mt-10 font-bold">Harsh Pandey</p>
-              <p className="text-xs">CEO, Skill Proof</p>
+<div className="mt-8  text-black text-xs sm:text-sm">
 
-              <img
-                src={sign1}
-                alt="Harsh Pandey"
-                className="mx-auto sm:mr-7  w-18"
-              />
-              <p className="sm:mt-5 font-semibold">Issued on</p>
-              <p>{new Date().toDateString()}</p>
+  {/* SIGNATURES */}
+  <div className="flex flex-col sm:flex-row justify-between gap-8">
+    
+    {/* LEFT / CEO */}
+    <div className="text-center sm:mt-18  sm:text-left">
+      <p className="font-bold mt-5">Harsh Pandey</p>
+      <p className="text-xs mb-2">CEO, Skill Proof</p>
+      <img
+        src={sign1}
+        alt="Harsh Pandey"
+        className="w-20 sm:w-20 mx-auto sm:mx-0"
+      />
+    </div>
 
-            </div>
+    {/* RIGHT / SHAREHOLDER */}
+    <div className="text-center sm:text-right sm:mt-25">
+      <p className="font-bold">Ayush Mishra</p>
+      <p className="text-xs mb-2">Shareholder / Owner</p>
+      <img
+        src={sign2}
+        alt="Ayush Mishra"
+        className="w-24 sm:w-23 mx-auto sm:ml-10"
+      />
+    </div>
+  </div>
 
-            <div className="text-center sm:text-right sm:mt-21">
-              
-              <p className="font-bold">Ayush Mishra</p>
-              <p className="text-xs">
-                Shareholder / Owner of Skill Proof
-              </p>
-              <img
-                src={sign2}
-                alt="Ayush Mishra"
-                className="mx-auto sm:ml-14 w-32 mb-2"
-              />
-            </div>
-          </div>
+  {/* ISSUED DATE */}
+  <div className="mt-6 text-center sm:text-left">
+    <p className="text-xs">
+      Issued on: {new Date().toDateString()}
+    </p>
+  </div>
+
+</div>
+
         </div>
       </div>
 
-      <div className="flex justify-center gap-4 pb-10 flex-wrap">
+      {/* BUTTONS */}
+      <div className="flex justify-center gap-3 pb-6 flex-wrap">
         <button
           onClick={downloadCertificate}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 font-bold text-white"
+          className="px-5 py-3 rounded-xl bg-green-600 font-bold text-white"
         >
           Download Certificate 📄
         </button>
 
         <button
           onClick={() => navigate("/")}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 font-bold text-white"
+          className="px-5 py-3 rounded-xl bg-blue-600 font-bold text-white"
         >
           Go to Home
         </button>
