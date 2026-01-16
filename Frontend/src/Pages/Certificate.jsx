@@ -38,8 +38,12 @@ export default function Certificate() {
   const renderStars = () => "⭐".repeat(stars);
 
   const downloadCertificate = async () => {
-    if (!certificateRef.current) return;
+  if (!certificateRef.current) {
+    alert("Certificate not found. Please refresh the page.");
+    return;
+  }
 
+  try {
     const canvas = await html2canvas(certificateRef.current, {
       scale: 3,
       useCORS: true,
@@ -54,8 +58,20 @@ export default function Certificate() {
 
     const pdf = new jsPDF("portrait", "mm", "a4");
     pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
+
     pdf.save("certificate.pdf");
-  };
+
+    // ✅ SUCCESS ALERT
+    alert("🎉 Your certificate downloaded successfully!");
+  } catch (error) {
+    console.error("Download error:", error);
+
+    // ❌ ERROR ALERT
+    alert(
+      "❌ Something went wrong while downloading the certificate. Please try again."
+    );
+  }
+};
 
   return (
     <>
@@ -69,6 +85,7 @@ export default function Certificate() {
           padding: 20px;
           background: #0f172a;
           overflow-x: auto;
+          
         }
 
         .certificate-a4 {
@@ -90,7 +107,10 @@ export default function Certificate() {
           .certificate-a4 {
             transform: scale(0.48);
             transform-origin: top center;
+            margin-top:60px;
+
           }
+          
         }
 
         .subtitle {
@@ -139,6 +159,7 @@ export default function Certificate() {
           justify-content: center;
           gap: 12px;
           padding-bottom: 30px;
+          background: #0f172a;
         }
 
         .btn {
@@ -158,6 +179,16 @@ export default function Certificate() {
           background: #2563eb;
         }
       `}</style>
+       <div className="footer-btns">
+        <button className="btn btn-download" onClick={downloadCertificate}>
+          Download Certificate
+        </button>
+
+        <button className="btn btn-home" onClick={() => navigate("/")}>
+          Go Home
+        </button>
+      </div>
+
 
       <div className="certificate-wrapper">
         <div ref={certificateRef} className="certificate-a4">
@@ -212,16 +243,7 @@ export default function Certificate() {
         </div>
       </div>
 
-      <div className="footer-btns">
-        <button className="btn btn-download" onClick={downloadCertificate}>
-          Download Certificate
-        </button>
-
-        <button className="btn btn-home" onClick={() => navigate("/")}>
-          Go Home
-        </button>
-      </div>
-
+     
       <Footer />
     </>
   );
