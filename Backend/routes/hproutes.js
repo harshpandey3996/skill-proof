@@ -8,5 +8,5 @@ router.post('/post',create);
 router.get('/get',Findall);
 
 router.post('/login',loginUser);
-
+ 
 module.exports = router;
