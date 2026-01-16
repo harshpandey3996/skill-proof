@@ -17,20 +17,16 @@ export default function Certificate() {
   const certificateType = location.state?.type || "frontend";
   const certificateLevel = location.state?.level || "beginner";
 
-  const testName =
-    certificateType === "webdev"
-      ? "Web Development Test"
-      : certificateType === "appdev"
-      ? "Mobile App Development Test"
-      : certificateType === "datascience"
-      ? "Data Science Test"
-      : certificateType === "cyber"
-      ? "Cyber Security Test"
-      : certificateType === "core"
-      ? "Core CSE Test"
-      : certificateType === "aiml"
-      ? "AI & Machine Learning Test"
-      : "Skill Test";
+  const testNameMap = {
+    webdev: "Web Development Test",
+    appdev: "Mobile App Development Test",
+    datascience: "Data Science Test",
+    cyber: "Cyber Security Test",
+    core: "Core CSE Test",
+    aiml: "AI & Machine Learning Test",
+  };
+
+  const testName = testNameMap[certificateType] || "Skill Test";
 
   const levelConfig = {
     beginner: { stars: 1, label: "Beginner Level" },
@@ -64,86 +60,86 @@ export default function Certificate() {
     <>
       <Navbar />
 
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          background: "linear-gradient(135deg, #020617, #1e293b, #020617)",
-          padding: "40px 16px",
-        }}
-      >
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-800 to-slate-950 flex justify-center items-center px-4 py-10">
         <div
           ref={certificateRef}
-          style={{
-            width: "100%",
-            maxWidth: "900px",
-            backgroundColor: "#ffffff",
-            borderRadius: "24px",
-            border: "8px solid #c9a44c",
-            padding: "40px",
-            textAlign: "center",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-          }}
+          className="w-full max-w-4xl bg-white rounded-3xl border-[8px] border-amber-400 p-6 sm:p-10 text-center shadow-2xl"
         >
-          <div style={{ fontWeight: "700", letterSpacing: "2px", color: "#b45309", marginBottom: "12px" }}>
+          <p className="tracking-widest text-amber-600 font-bold text-xs sm:text-sm">
             SKILL PROOF
-          </div>
+          </p>
 
-          <h1 style={{ fontSize: "40px", marginBottom: "12px", color: "#0f172a" }}>
+          <h1 className="text-2xl sm:text-4xl font-bold text-slate-900 mt-2">
             Certificate of Excellence
           </h1>
 
-          <p style={{ textTransform: "uppercase", fontSize: "12px", letterSpacing: "2px", color: "#555" }}>
+          <p className="uppercase text-[10px] sm:text-xs tracking-widest text-gray-500 mt-3">
             This is proudly presented to
           </p>
 
-          <h2 style={{ marginTop: "20px", fontSize: "32px", color: "#020617" }}>
+          <h2 className="mt-4 text-xl sm:text-3xl font-semibold text-slate-950">
             {user?.name || "Student Name"}
           </h2>
 
-          <div style={{ fontSize: "26px", marginTop: "10px" }}>
-            {renderStars()}
-          </div>
+          <div className="text-lg sm:text-2xl mt-2">{renderStars()}</div>
+          <p className="font-semibold text-gray-600 text-sm sm:text-base">
+            {label}
+          </p>
 
-          <p style={{ marginTop: "6px", fontWeight: "600", color: "#666" }}>{label}</p>
-
-          <p style={{ marginTop: "24px", fontSize: "18px" }}>
+          <p className="mt-6 text-sm sm:text-lg">
             For successfully completing the
           </p>
 
-          <p style={{ fontSize: "22px", fontWeight: "700", color: "#1e3a8a" }}>
+          <p className="text-lg sm:text-2xl font-bold text-blue-700">
             {testName}
           </p>
 
-          {/* Footer */}
-          <div style={{ marginTop: "50px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px", color: "#444" }}>
-            <div style={{ textAlign: "left" }}>
-              <strong>Date</strong>
-              <div>{new Date().toDateString()}</div>
-             
-              <div style={{ fontWeight: "700" }}>Harsh Pandey</div>
-              <div style={{ fontSize: "12px" }}>CEO, Skill Proof</div>
-               <img src={sign1} alt="Harsh Pandey" style={{ width: "110px", height: "50px" , margin: "3px"}} />
+          {/* FOOTER */}
+          <div className="mt-10 flex flex-col sm:flex-row justify-between gap-6 text-sm text-gray-700">
+            <div className="text-center sm:text-left">
+              
+              
+              <p className="sm:mt-19 mt-10 font-bold">Harsh Pandey</p>
+              <p className="text-xs">CEO, Skill Proof</p>
+
+              <img
+                src={sign1}
+                alt="Harsh Pandey"
+                className="mx-auto sm:mr-7  w-18"
+              />
+              <p className="sm:mt-5 font-semibold">Issued on</p>
+              <p>{new Date().toDateString()}</p>
+
             </div>
 
-            <div style={{ textAlign: "right" }}>
+            <div className="text-center sm:text-right sm:mt-21">
               
-              <div style={{ fontWeight: "700" }}>Ayush Mishra</div>
-              <div style={{ fontSize: "12px" }}>Shareholder/Owner of Skill Proof</div>
-              <img src={sign2} alt="Ayush Mishra" style={{ width: "130px", height: "60px" , marginLeft:"30px" }} />
+              <p className="font-bold">Ayush Mishra</p>
+              <p className="text-xs">
+                Shareholder / Owner of Skill Proof
+              </p>
+              <img
+                src={sign2}
+                alt="Ayush Mishra"
+                className="mx-auto sm:ml-14 w-32 mb-2"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: "16px", paddingBottom: "40px" }}>
-        <button onClick={downloadCertificate} style={{ padding: "12px 24px", borderRadius: "10px", background: "linear-gradient(135deg,#22c55e,#16a34a)", fontWeight: "700", border: "none", cursor: "pointer" }}>
+      <div className="flex justify-center gap-4 pb-10 flex-wrap">
+        <button
+          onClick={downloadCertificate}
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 font-bold text-white"
+        >
           Download Certificate 📄
         </button>
 
-        <button onClick={() => navigate("/")} style={{ padding: "12px 24px", borderRadius: "10px", background: "linear-gradient(135deg,#60a5fa,#2563eb)", fontWeight: "700", border: "none", cursor: "pointer" }}>
+        <button
+          onClick={() => navigate("/")}
+          className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 font-bold text-white"
+        >
           Go to Home
         </button>
       </div>
