@@ -14,12 +14,12 @@ app.use(cors({
 
 app.use(express.json());
 
-HP.sync({ alter: true })
+HP.sync()
   .then(() => console.log("Tables synced"))
   .catch(err => console.log("Sync error:", err));
 
 app.use("/api", hproutes);
-
+  
 app.listen(port, () => {
   console.log("Server running on port", port);
 });
