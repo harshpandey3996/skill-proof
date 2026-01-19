@@ -1,12 +1,26 @@
-const {create , Findall, loginUser } = require('../Controller/hpcontroller');
-const express = require('express');
+const express = require("express");
 const router = express.Router();
- 
 
-router.post('/post',create);
+const {
+  create,
+  Findall,
+  loginUser,
+} = require("../Controller/hpcontroller");
 
-router.get('/get',Findall);
+const {
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
+} = require("../Controller/passwordController");
 
-router.post('/login',loginUser);
- 
+// user
+router.post("/post", create);
+router.post("/login", loginUser);
+router.get("/get", Findall);
+
+// password
+router.post("/forgot-password", forgotPassword);
+router.post("/verify-otp", verifyOtp);
+router.post("/reset-password", resetPassword);
+
 module.exports = router;
