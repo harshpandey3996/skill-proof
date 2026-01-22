@@ -10,7 +10,7 @@ const hproutes = require("./routes/hproutes");
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-// ❌ PRODUCTION में sync मत चलाओ
+
 // HP.sync({ alter: true });
 
 app.use("/api", hproutes);
