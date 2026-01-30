@@ -4,8 +4,7 @@ import html2canvas from "html2canvas";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import sign1 from "../assets/Pandey.png";
-import sign2 from "../assets/Mishra.png";
+import skillSign from "../assets/skillproof.png";
 
 export default function Certificate() {
   const navigate = useNavigate();
@@ -37,47 +36,31 @@ export default function Certificate() {
   const { stars, label } = levelConfig[certificateLevel];
   const renderStars = () => "⭐".repeat(stars);
 
+  // ================= FINAL OPTIMIZED DOWNLOAD =================
   const downloadCertificate = async () => {
-  if (!certificateRef.current) {
-    alert("Certificate not found. Please refresh the page.");
-    return;
-  }
+    if (!certificateRef.current) return;
 
-  try {
     const canvas = await html2canvas(certificateRef.current, {
-      scale: 3,
-      useCORS: true,
+      scale: 2.2, // sharpness
       backgroundColor: "#ffffff",
-      width: 794,
-      height: 1123,
-      windowWidth: 794,
-      windowHeight: 1123,
+      useCORS: true,
     });
 
-    const imgData = canvas.toDataURL("image/png");
+    const imgData = canvas.toDataURL("image/jpeg", 0.85); // size control
 
     const pdf = new jsPDF("portrait", "mm", "a4");
-    pdf.addImage(imgData, "PNG", 0, 0, 210, 297);
 
+    const pdfWidth = 210;
+    const pdfHeight = 297;
+
+    pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight, "", "FAST");
     pdf.save("certificate.pdf");
-
-    // ✅ SUCCESS ALERT
-    alert("🎉 Your certificate downloaded successfully!");
-  } catch (error) {
-    console.error("Download error:", error);
-
-    // ❌ ERROR ALERT
-    alert(
-      "❌ Something went wrong while downloading the certificate. Please try again."
-    );
-  }
-};
+  };
 
   return (
     <>
       <Navbar />
 
-      {/* INLINE CSS */}
       <style>{`
         .certificate-wrapper {
           display: flex;
@@ -85,7 +68,6 @@ export default function Certificate() {
           padding: 20px;
           background: #0f172a;
           overflow-x: auto;
-          
         }
 
         .certificate-a4 {
@@ -97,21 +79,19 @@ export default function Certificate() {
           padding: 48px;
           box-sizing: border-box;
           text-align: center;
-
           display: flex;
           flex-direction: column;
-          justify-content: space-between; /* 🔥 bottom space fix */
+          justify-content: space-between;
         }
 
         @media (max-width: 768px) {
-          .certificate-a4 {
-            transform: scale(0.48);
-            transform-origin: top center;
-            margin-top:60px;
+  .certificate-a4 {
+    transform: scale(0.48);
+    transform-origin: top center;
+    margin-top: 60px;
+  }
+}
 
-          }
-          
-        }
 
         .subtitle {
           letter-spacing: 4px;
@@ -139,19 +119,13 @@ export default function Certificate() {
           margin-top: 10px;
         }
 
-        .signatures {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 70px; /* 🔥 reduced */
+        .signature-box {
+          text-align: right;
+          margin-top: 40px;
         }
 
-        .signatures img {
-          width: 120px;
-        }
-
-        .sign-name {
-          font-weight: bold;
-          margin-top: 8px;
+        .signature-box img {
+          width: 140px;
         }
 
         .footer-btns {
@@ -179,21 +153,18 @@ export default function Certificate() {
           background: #2563eb;
         }
       `}</style>
-       <div className="footer-btns">
+
+      <div className="footer-btns">
         <button className="btn btn-download" onClick={downloadCertificate}>
           Download Certificate
         </button>
-
         <button className="btn btn-home" onClick={() => navigate("/")}>
           Go Home
         </button>
       </div>
 
-
       <div className="certificate-wrapper">
         <div ref={certificateRef} className="certificate-a4">
-          
-          {/* TOP */}
           <div>
             <div className="subtitle">SKILL PROOF</div>
             <div className="title">Certificate of Excellence</div>
@@ -202,7 +173,7 @@ export default function Certificate() {
               THIS IS PROUDLY PRESENTED TO
             </p>
 
-            <div className="name ">
+            <div className="name">
               {user?.name || "Student Name"}
             </div>
 
@@ -219,31 +190,17 @@ export default function Certificate() {
             <div className="test">{testName}</div>
           </div>
 
-          {/* MIDDLE */}
-          <div className="signatures">
-            <div>
-              <img src={sign1} alt="CEO Signature" />
-              <div className="sign-name">Harsh Pandey</div>
-              <div style={{ fontSize: "12px" }}>CEO, Skill Proof</div>
-            </div>
-
-            <div style={{ textAlign: "right" }}>
-              <img src={sign2} alt="Owner Signature" />
-              <div className="sign-name">Ayush Mishra</div>
-              <div style={{ fontSize: "12px" }}>
-                Shareholder / Owner
-              </div>
+          <div className="signature-box">
+            <img src={skillSign} alt="Skill Proof Signature" />
+            <div style={{ fontWeight: "bold" }}>Skill Proof</div>
+            <div style={{ fontSize: "12px" }}>Authorized Signature</div>
+            <div style={{ fontSize: "12px" }}>
+              Issued on: {new Date().toDateString()}
             </div>
           </div>
-
-          {/* BOTTOM */}
-          <p style={{ fontSize: "12px", marginTop: "20px" }}>
-            Issued on: {new Date().toDateString()}
-          </p>
         </div>
       </div>
 
-     
       <Footer />
     </>
   );
