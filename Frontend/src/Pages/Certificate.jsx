@@ -4,7 +4,7 @@ import html2canvas from "html2canvas";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import skillSign from "../assets/skillproof.png";
+import skillSign from "./skillproof.png";
 
 export default function Certificate() {
   const navigate = useNavigate();
