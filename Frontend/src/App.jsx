@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 /* AUTH PAGES */
+
 import Option from "./Pages/Option";
 import Signup from "./Pages/Signup";
 import Login from "./Pages/Login";
 
 /* TASK PAGES */
+
 import WebDevTask from "./Pages/WebDevTask";
 import AppDevTask from "./Pages/Appdev";
 import DataScienceTask from "./Pages/DataScienceTask";
@@ -15,6 +17,7 @@ import CyberSecurityTask from "./Pages/CyberSecurityTask";
 import CoreCSETask from "./Pages/CoreCSETask";
 
 /* TEST PAGES */
+
 import WebDevelopmentTest from "./Tests/WebDevTest";
 import AppDevTest from "./Tests/AppDevTest";
 import DataScienceTest from "./Tests/DataScienceTest";
@@ -23,6 +26,7 @@ import CoreCSETest from "./Tests/CoreCSETest";
 import AIMachineTest from "./Tests/AIMachineTest";
 
 /* EXTRA */
+
 import Certificate from "./Pages/Certificate";
 import LandingNeo from "./Pages/LandingNeo";
 import AIMachineTest2 from "./TestInter/AiMachineTest2";
@@ -38,6 +42,8 @@ import AppDevTest3 from "./TestAdvance/AppDevTest3";
 import CoreCSETest3 from "./TestAdvance/CoreCSETest3";
 import DataScienceTest3 from "./TestAdvance/DataScienceTest3";
 import CyberSecurityTest3 from "./TestAdvance/CyberSecurityTest3";
+import HelpCenter from "./Pages/HelpCenter";
+
 
 function App() {
   const [user, setUser] = useState("");
@@ -63,6 +69,7 @@ function App() {
       <Route path="/option" element={<Option />} />
       <Route path="/sign" element={<Signup setLogin={setLogin} setUser={setUser} />} />
       <Route path="/login" element={<Login setLogin={setLogin} setUser={setUser} />} />
+
 
       {/* TASKS */}
       <Route path="/webdev-task" element={<WebDevTask />} />
@@ -94,7 +101,7 @@ function App() {
       {/* EXTRA */}
       <Route path="/certificate" element={<Certificate />} />
       <Route path="/select-level" element={<SelectLevel />} />
-
+      <Route path="/help-center" element={<HelpCenter />} />
     </Routes>
   );
 }
