@@ -66,7 +66,7 @@ function Login({ setLogin, setUser }) {
         setUser(res.data);
         localStorage.setItem("token", "Hp3996@@HP");
         localStorage.setItem("user", JSON.stringify(res.data));
-        navigate("/");
+        navigate("/option");
       }
     } catch (err) {
       console.log(err);

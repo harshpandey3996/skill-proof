@@ -144,6 +144,7 @@ export default function CoreCSETask() {
             </p>
           </section>
 
+          
           {/* SECTION 6 */}
           <section>
             <h2 className="text-3xl font-semibold mb-6">
