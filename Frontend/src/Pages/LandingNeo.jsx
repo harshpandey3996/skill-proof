@@ -14,7 +14,6 @@ const HERO_IMAGES = [
   "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
 ];
 
-// 🔥 Track → Route mapping
 const TRACK_ROUTES = {
   Web_Development: "/webdev-task",
   "AI/ML": "/ml-task",
@@ -34,16 +33,30 @@ export default function LandingNeo() {
     return () => clearInterval(t);
   }, []);
 
+  // 🔐 COMMON AUTH CHECK
+  const isLoggedIn = () => {
+    return localStorage.getItem("token");
+  };
+
+  // CTA button
   const handleCTA = () => {
-    const token = localStorage.getItem("token");
-    navigate(token ? "/option" : "/login");
+    navigate(isLoggedIn() ? "/option" : "/login");
+  };
+
+  // Popular track click
+  const handleTrackClick = (route) => {
+    if (isLoggedIn()) {
+      navigate(route);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
     <div className="bg-black text-white overflow-hidden">
       <Navbar />
 
-      {/* ================= HERO ================= */}
+      {/* HERO */}
       <section className="relative min-h-[92vh]">
         <AnimatePresence>
           <motion.div
@@ -60,16 +73,12 @@ export default function LandingNeo() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28">
-          <motion.h1
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-6xl font-extrabold"
-          >
+          <h1 className="text-4xl md:text-6xl font-extrabold">
             Prove Skills that{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
               Shine
             </span>
-          </motion.h1>
+          </h1>
 
           <p className="mt-5 max-w-xl text-gray-300">
             Real challenges. Verifiable results. Certificates that recruiters
@@ -83,33 +92,11 @@ export default function LandingNeo() {
             >
               Get Verified Free <ArrowRight />
             </button>
-            <div className="hidden md:flex items-center gap-2 text-sm text-gray-400">
-              <Sparkles /> 3k+ learners
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
-      <section className="-mt-16 max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { icon: <Zap />, title: "Real-world tests", desc: "Practical scenarios only" },
-          { icon: <ShieldCheck />, title: "Verified proof", desc: "Shareable certificates" },
-          { icon: <Sparkles />, title: "Fast growth", desc: "Track & improve" },
-        ].map((c, idx) => (
-          <motion.div
-            key={idx}
-            whileHover={{ y: -6 }}
-            className="rounded-2xl bg-white/10 backdrop-blur border border-white/10 p-6"
-          >
-            <div className="text-emerald-400 mb-2">{c.icon}</div>
-            <h3 className="font-semibold">{c.title}</h3>
-            <p className="text-sm text-gray-400">{c.desc}</p>
-          </motion.div>
-        ))}
-      </section>
-
-      {/* ================= POPULAR TRACKS (CLICKABLE) ================= */}
+      {/* POPULAR TRACKS */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         <h2 className="text-3xl md:text-4xl font-bold mb-8">
           Popular Tracks
@@ -121,7 +108,9 @@ export default function LandingNeo() {
               key={idx}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
-              onClick={() => navigate(TRACK_ROUTES[track])}
+              onClick={() =>
+                handleTrackClick(TRACK_ROUTES[track])
+              }
               className="cursor-pointer rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-fuchsia-500/20 to-cyan-500/20"
             >
               <div className="p-6 bg-black/50 backdrop-blur">
@@ -138,7 +127,6 @@ export default function LandingNeo() {
       <NeoPageOne />
       <NeoPageTwo />
       <NeoPageThree />
-
       <Footer />
     </div>
   );
