@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Login({ setLogin, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const rippleRef = useRef(null);
 
@@ -52,25 +53,30 @@ function Login({ setLogin, setUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/login`,
+        { email, password },
+        { timeout: 20000 } // 20 sec for cold start
+      );
 
+      // Backend se real token aana chahiye
+      const { token, user } = res.data;
 
-      if (res.status === 200) {
-        alert("Login successful!");
-        setLogin(true);
-        setUser(res.data);
-        localStorage.setItem("token", "Hp3996@@HP");
-        localStorage.setItem("user", JSON.stringify(res.data));
-        navigate("/option");
-      }
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setLogin(true);
+      setUser(user);
+
+      navigate("/option");
     } catch (err) {
       console.log(err);
-      alert("Invalid credentials or user not found!");
+      alert("Invalid credentials or server sleeping!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,32 +96,42 @@ function Login({ setLogin, setUser }) {
           Welcome Back
         </h1>
 
-        <div className="grid md:grid-cols-1 gap-5">
-          {[
-            ["Email", email, setEmail, "email", "email"],
-            ["Password", password, setPassword, "password", "password"],
-          ].map(([label, value, setter, type, key]) => (
-            <div key={key}>
-              <label className="text-sm text-gray-300">{label}</label>
-              <input
-                type={type}
-                placeholder={`Enter your ${label.toLowerCase()}`}
-                value={value}
-                onChange={(e) => setter(e.target.value)}
-                className={`mt-1 w-full rounded-lg p-3 bg-black/40 text-white
-                          placeholder-gray-400 border border-white/20
-                          focus:outline-none focus:ring-2 focus:ring-green-400`}
-              />
-            </div>
-          ))}
+        <div className="grid gap-5">
+          <div>
+            <label className="text-sm text-gray-300">Email</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white
+                         border border-white/20 focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-300">Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white
+                         border border-white/20 focus:ring-2 focus:ring-green-400"
+            />
+          </div>
         </div>
 
         <button
           type="submit"
+          disabled={loading}
           className="mt-6 w-full py-3 rounded-lg font-semibold
-                     bg-green-500 text-black hover:bg-green-400 transition"
+                     bg-green-500 text-black hover:bg-green-400 transition
+                     disabled:opacity-60"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-center text-gray-300 mt-5 text-sm">
@@ -129,7 +145,6 @@ function Login({ setLogin, setUser }) {
         </p>
       </form>
 
-      {/* ================= WATER FLOW CSS ================= */}
       <style>{`
 .water-drop {
   position: absolute;
@@ -148,18 +163,9 @@ function Login({ setLogin, setUser }) {
 }
 
 @keyframes liquidFlow {
-  0% {
-    transform: scale(0.4);
-    opacity: 0.9;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(2.2) translateY(-90px);
-    opacity: 0;
-  }
+  0% { transform: scale(0.4); opacity: 0.9; }
+  40% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2) translateY(-90px); opacity: 0; }
 }
 `}</style>
     </div>
