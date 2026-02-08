@@ -1,4 +1,5 @@
 const janhvi = require("../model/hpmodel");
+const jwt = require("jsonwebtoken");
 
 // REGISTER
 const create = async (req, res) => {
@@ -15,7 +16,7 @@ const Findall = async (req, res) => {
   res.json(await janhvi.findAll());
 };
 
-// LOGIN
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await janhvi.findOne({ where: { email } });
@@ -24,7 +25,17 @@ const loginUser = async (req, res) => {
   if (user.password !== password)
     return res.status(401).json({ message: "Invalid password" });
 
-  res.json(user);
+  // JWT token generate
+  const jwtToken = jwt.sign(
+    { id: user.id },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  res.json({
+    token: jwtToken,
+    user: user,
+  });
 };
 
 module.exports = { create, Findall, loginUser };
