@@ -19,6 +19,7 @@ export default function Navbar() {
     localStorage.removeItem("user");
     setCurrentUser(null);
     navigate("/");
+    window.location.reload();
   };
 
   const loggedIn = !!currentUser;
@@ -32,6 +33,7 @@ export default function Navbar() {
             SkillProof
           </Link>
 
+          {/* DESKTOP */}
           <div className="hidden md:flex items-center gap-4">
             {loggedIn ? (
               <>
@@ -61,11 +63,44 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* MOBILE ICON */}
           <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
       </div>
+
+      {/* MOBILE MENU */}
+      {isOpen && (
+        <div className="md:hidden bg-black border-t border-gray-700 px-6 py-4 space-y-4">
+          {loggedIn ? (
+            <>
+              <div className="text-sm text-gray-300">
+                Welcome {currentUser.name}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full border border-red-400 py-2 rounded-full hover:bg-red-400 hover:text-black transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" onClick={() => setIsOpen(false)}>
+                <button className="w-full border border-green-400 py-2 rounded-full hover:bg-green-400 hover:text-black transition">
+                  Login
+                </button>
+              </Link>
+              <Link to="/sign" onClick={() => setIsOpen(false)}>
+                <button className="w-full border border-green-400 py-2 rounded-full hover:bg-green-400 hover:text-black transition">
+                  Sign Up
+                </button>
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }
