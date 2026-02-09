@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL; // /api included in .env
 
 function Signup({ setLogin, setUser }) {
   const [name, setName] = useState("");
@@ -11,35 +11,42 @@ function Signup({ setLogin, setUser }) {
   const [confirmpassword, setCpassword] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // 👈 new
+
   const navigate = useNavigate();
   const rippleRef = useRef(null);
 
-  // ================= OPTIMIZED WATER EFFECT =================
+  // ================= WATER EFFECT =================
   useEffect(() => {
     const container = rippleRef.current;
     if (!container) return;
 
-    let lastTime = 0;
+    let lastX = 0,
+      lastY = 0,
+      lastTime = 0;
 
-    const createWater = (x, y) => {
+    const createWater = (x, y, speed) => {
       const drop = document.createElement("span");
-      const size = 80;
+      const size = Math.min(140, 60 + speed * 1.8);
       drop.style.width = `${size}px`;
       drop.style.height = `${size}px`;
       drop.style.left = `${x - size / 2}px`;
       drop.style.top = `${y - size / 2}px`;
       drop.className = "water-drop";
       container.appendChild(drop);
-      setTimeout(() => drop.remove(), 1000);
+      setTimeout(() => drop.remove(), 1200);
     };
 
     const handleMove = (e) => {
       const now = Date.now();
-      if (now - lastTime > 60) { // throttle (16fps)
-        createWater(e.clientX, e.clientY);
-        lastTime = now;
-      }
+      const dt = now - lastTime || 16;
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      const speed = (Math.sqrt(dx * dx + dy * dy) / dt) * 20;
+      createWater(e.clientX, e.clientY, speed);
+      lastX = e.clientX;
+      lastY = e.clientY;
+      lastTime = now;
     };
 
     window.addEventListener("mousemove", handleMove);
@@ -54,8 +61,16 @@ function Signup({ setLogin, setUser }) {
     if (!password) err.password = true;
     if (!confirmpassword) err.confirmpassword = true;
     if (phone && phone.length !== 10) err.phone = true;
-    if (password !== confirmpassword) err.confirmpassword = true;
-    if (password.length > 8) err.password = true;
+
+    if (password !== confirmpassword) {
+      err.confirmpassword = true;
+      alert("Password and Confirm Password must be same");
+    }
+
+    if (password.length > 8) {
+      err.password = true;
+      alert("Password max 8 characters allowed");
+    }
 
     setErrors(err);
     return Object.keys(err).length === 0;
@@ -64,7 +79,7 @@ function Signup({ setLogin, setUser }) {
   // ================= SUBMIT =================
   const submit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || loading) return;
 
     try {
       setLoading(true);
@@ -73,13 +88,14 @@ function Signup({ setLogin, setUser }) {
         name,
         email,
         password,
+        confirmpassword,
         phone,
       });
 
+      alert("User Registered Successfully!");
       setLogin(true);
       setUser(res.data);
       localStorage.setItem("user", JSON.stringify(res.data));
-
       navigate("/option");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
@@ -118,16 +134,25 @@ function Signup({ setLogin, setUser }) {
           />
         </div>
 
+        {/* BUTTON */}
         <button
           type="submit"
           disabled={loading}
-          className="mt-8 w-full py-3 rounded-lg font-semibold
-          bg-green-500 text-black hover:bg-green-400 transition
-          disabled:opacity-60"
+          className={`mt-8 w-full py-3 rounded-lg font-semibold
+          ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"}
+          text-black transition`}
         >
-          {loading ? "Creating Account..." : "Sign Up"}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+              Creating account...
+            </span>
+          ) : (
+            "Sign Up"
+          )}
         </button>
 
+        {/* 👇 YE WALA PART TERA ORIGINAL - BOTTOM LINK */}
         <p className="text-center text-gray-300 mt-5 text-sm">
           Already have an account?{" "}
           <span
@@ -146,16 +171,18 @@ function Signup({ setLogin, setUser }) {
   border-radius: 50%;
   filter: blur(10px);
   background: radial-gradient(
-    circle,
-    rgba(180,220,255,0.8),
-    rgba(80,140,255,0.3),
+    circle at 30% 30%,
+    rgba(180,220,255,0.9),
+    rgba(80,140,255,0.45),
+    rgba(30,80,200,0.15),
     transparent 70%
   );
-  animation: liquidFlow 1s ease-out forwards;
+  animation: liquidFlow 1.2s ease-out forwards;
 }
 @keyframes liquidFlow {
-  0% { transform: scale(0.6); opacity: 0.8; }
-  100% { transform: scale(2) translateY(-60px); opacity: 0; }
+  0% { transform: scale(0.4); opacity: 0.9; }
+  40% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(2.2) translateY(-90px); opacity: 0; }
 }
 `}</style>
     </div>
