@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const API = import.meta.env.VITE_API_URL; // /api included in .env
 
@@ -77,34 +79,43 @@ function Signup({ setLogin, setUser }) {
   };
 
   // ================= SUBMIT =================
-  const submit = async (e) => {
-    e.preventDefault();
-    if (!validate() || loading) return;
+ 
+const submit = async (e) => {
+  e.preventDefault();
+  if (!validate() || loading) return;
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await axios.post(`${API}/post`, {
-        name,
-        email,
-        password,
-        confirmpassword,
-        phone,
-      });
+    const res = await axios.post(`${API}/post`, {
+      name,
+      email,
+      password,
+      confirmpassword,
+      phone,
+    });
 
-      alert("User Registered Successfully!");
-      setLogin(true);
-      setUser(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data));
-      navigate("/option");
-    } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+    alert("User Registered Successfully!");
+
+    setLogin(true);
+    setUser(res.data);
+
+   
+    localStorage.setItem("token", "Hp3996@@HP");
+    localStorage.setItem("user", JSON.stringify(res.data));
+
+    navigate("/option");
+    window.location.reload(); 
+  } catch (err) {
+    alert(err.response?.data?.message || "Registration failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
+    <>
+  <Navbar/>
     <div
       ref={rippleRef}
       className="relative min-h-screen flex items-center justify-center
@@ -186,6 +197,9 @@ function Signup({ setLogin, setUser }) {
 }
 `}</style>
     </div>
+        <Footer/>
+    </>
+    
   );
 }
 
