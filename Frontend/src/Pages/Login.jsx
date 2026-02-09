@@ -6,6 +6,7 @@ function Login({ setLogin, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const rippleRef = useRef(null);
 
@@ -14,20 +15,18 @@ function Login({ setLogin, setUser }) {
     const container = rippleRef.current;
     if (!container) return;
 
-    let lastX = 0;
-    let lastY = 0;
-    let lastTime = 0;
+    let lastX = 0,
+      lastY = 0,
+      lastTime = 0;
 
     const createWater = (x, y, speed) => {
       const drop = document.createElement("span");
       const size = Math.min(140, 60 + speed * 1.8);
-
       drop.style.width = `${size}px`;
       drop.style.height = `${size}px`;
       drop.style.left = `${x - size / 2}px`;
       drop.style.top = `${y - size / 2}px`;
       drop.className = "water-drop";
-
       container.appendChild(drop);
       setTimeout(() => drop.remove(), 1200);
     };
@@ -35,13 +34,10 @@ function Login({ setLogin, setUser }) {
     const handleMove = (e) => {
       const now = Date.now();
       const dt = now - lastTime || 16;
-
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       const speed = (Math.sqrt(dx * dx + dy * dy) / dt) * 20;
-
       createWater(e.clientX, e.clientY, speed);
-
       lastX = e.clientX;
       lastY = e.clientY;
       lastTime = now;
@@ -51,30 +47,28 @@ function Login({ setLogin, setUser }) {
     return () => window.removeEventListener("mousemove", handleMove);
   }, []);
 
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (loading) return;
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/login`,
-        { email, password },
-        { timeout: 20000 } // 20 sec for cold start
-      );
+      setLoading(true);
 
-      // Backend se real token aana chahiye
-      const { token, user } = res.data;
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+        email,
+        password,
+      });
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      setLogin(true);
-      setUser(user);
-
-      navigate("/option");
+      if (res.status === 200) {
+        setLogin(true);
+        setUser(res.data);
+        localStorage.setItem("token", "Hp3996@@HP");
+        localStorage.setItem("user", JSON.stringify(res.data));
+        navigate("/option");
+      }
     } catch (err) {
-      console.log(err);
-      alert("Invalid credentials or server sleeping!");
+      alert("Invalid credentials or user not found!");
     } finally {
       setLoading(false);
     }
@@ -84,13 +78,12 @@ function Login({ setLogin, setUser }) {
     <div
       ref={rippleRef}
       className="relative min-h-screen flex items-center justify-center
-                 bg-gradient-to-br from-black via-gray-900 to-black
-                 overflow-hidden px-4"
+      bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden px-4"
     >
       <form
         onSubmit={handleSubmit}
         className="relative z-10 w-full max-w-lg p-8 rounded-2xl
-                   bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
+        bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
       >
         <h1 className="text-3xl font-bold text-center text-white mb-6">
           Welcome Back
@@ -104,9 +97,8 @@ function Login({ setLogin, setUser }) {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white
-                         border border-white/20 focus:ring-2 focus:ring-green-400"
+              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white border border-white/20
+              focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
 
@@ -117,23 +109,31 @@ function Login({ setLogin, setUser }) {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white
-                         border border-white/20 focus:ring-2 focus:ring-green-400"
+              className="mt-1 w-full rounded-lg p-3 bg-black/40 text-white border border-white/20
+              focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
         </div>
 
+        {/* BUTTON */}
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full py-3 rounded-lg font-semibold
-                     bg-green-500 text-black hover:bg-green-400 transition
-                     disabled:opacity-60"
+          className={`mt-6 w-full py-3 rounded-lg font-semibold
+          ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"}
+          text-black transition`}
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+              Logging in...
+            </span>
+          ) : (
+            "Login"
+          )}
         </button>
 
+        {/* 👇 TERA ORIGINAL BOTTOM PART */}
         <p className="text-center text-gray-300 mt-5 text-sm">
           Don’t have an account?{" "}
           <span
@@ -153,15 +153,13 @@ function Login({ setLogin, setUser }) {
   filter: blur(10px);
   background: radial-gradient(
     circle at 30% 30%,
-    rgba(180, 220, 255, 0.9),
-    rgba(80, 140, 255, 0.45),
-    rgba(30, 80, 200, 0.15),
+    rgba(180,220,255,0.9),
+    rgba(80,140,255,0.45),
+    rgba(30,80,200,0.15),
     transparent 70%
   );
   animation: liquidFlow 1.2s ease-out forwards;
-  mix-blend-mode: screen;
 }
-
 @keyframes liquidFlow {
   0% { transform: scale(0.4); opacity: 0.9; }
   40% { transform: scale(1); opacity: 0.7; }
