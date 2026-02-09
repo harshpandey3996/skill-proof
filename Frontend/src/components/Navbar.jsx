@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react"; // ✅ FIX
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,17 +12,7 @@ export default function Navbar() {
     setLoggedIn(!!token);
   }, []);
 
-  // 🔐 100% SAFE USER PARSE
-  let currentUser = null;
-  try {
-    const rawUser = localStorage.getItem("user");
-    currentUser = rawUser && rawUser !== "undefined"
-      ? JSON.parse(rawUser)
-      : null;
-  } catch (err) {
-    console.error("User parse error:", err);
-    currentUser = null;
-  }
+  const currentUser = JSON.parse(localStorage.getItem("user") || "null");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -35,6 +25,7 @@ export default function Navbar() {
     <header className="bg-black text-white shadow-md">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
+
           <Link to="/" className="text-2xl font-bold text-green-400">
             SkillProof
           </Link>
@@ -66,6 +57,7 @@ export default function Navbar() {
                     Sign Up
                   </button>
                 </Link>
+                
               </>
             )}
           </div>
@@ -104,6 +96,7 @@ export default function Navbar() {
                   Sign Up
                 </button>
               </Link>
+              
             </>
           )}
         </div>
