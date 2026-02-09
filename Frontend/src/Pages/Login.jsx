@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 function Login({ setLogin, setUser }) {
   const [email, setEmail] = useState("");
@@ -75,6 +77,8 @@ function Login({ setLogin, setUser }) {
   };
 
   return (
+    <>
+    <Navbar/>
     <div
       ref={rippleRef}
       className="relative min-h-screen flex items-center justify-center
@@ -167,6 +171,8 @@ function Login({ setLogin, setUser }) {
 }
 `}</style>
     </div>
+    <Footer/>
+    </>
   );
 }
 
