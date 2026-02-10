@@ -4,7 +4,8 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const API = import.meta.env.VITE_API_URL; // /api included in .env
+const API = import.meta.env.VITE_API_URL; 
+// example: https://skillproof-ayush-harsh-in.onrender.com/api
 
 function Signup({ setLogin, setUser }) {
   const [name, setName] = useState("");
@@ -13,7 +14,7 @@ function Signup({ setLogin, setUser }) {
   const [confirmpassword, setCpassword] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false); // 👈 new
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const rippleRef = useRef(null);
@@ -23,9 +24,7 @@ function Signup({ setLogin, setUser }) {
     const container = rippleRef.current;
     if (!container) return;
 
-    let lastX = 0,
-      lastY = 0,
-      lastTime = 0;
+    let lastX = 0, lastY = 0, lastTime = 0;
 
     const createWater = (x, y, speed) => {
       const drop = document.createElement("span");
@@ -79,103 +78,96 @@ function Signup({ setLogin, setUser }) {
   };
 
   // ================= SUBMIT =================
- 
-const submit = async (e) => {
-  e.preventDefault();
-  if (!validate() || loading) return;
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!validate() || loading) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const res = await axios.post(`${API}/post`, {
-      name,
-      email,
-      password,
-      confirmpassword,
-      phone,
-    });
+      const res = await axios.post(`${API}/post`, {
+        name,
+        email,
+        password,
+        confirmpassword,
+        phone,
+      });
 
-    alert("User Registered Successfully!");
+      alert("User Registered Successfully!");
 
-    setLogin(true);
-    setUser(res.data);
+      // auth state
+      setLogin(true);
+      setUser(res.data);
 
-   
-    localStorage.setItem("token", "Hp3996@@HP");
-    localStorage.setItem("user", JSON.stringify(res.data));
+      // localStorage
+      localStorage.setItem("token", "Hp3996@@HP");
+      localStorage.setItem("user", JSON.stringify(res.data));
 
-    navigate("/option");
-    window.location.reload(); 
-  } catch (err) {
-    alert(err.response?.data?.message || "Registration failed");
-  } finally {
-    setLoading(false);
-  }
-};
+      // IMPORTANT: no reload
+      navigate("/option");
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
-  <Navbar/>
-    <div
-      ref={rippleRef}
-      className="relative min-h-screen flex items-center justify-center
-      bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden px-4"
-    >
-      <form
-        onSubmit={submit}
-        className="relative z-10 w-full max-w-lg p-8 rounded-2xl
-        bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
+      <Navbar />
+
+      <div
+        ref={rippleRef}
+        className="relative min-h-screen flex items-center justify-center
+        bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden px-4"
       >
-        <h1 className="text-3xl font-bold text-center text-white mb-6">
-          Create Account
-        </h1>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          <Input label="Name" value={name} setValue={setName} error={errors.name} />
-          <Input label="Email" value={email} setValue={setEmail} error={errors.email} type="email" />
-          <Input label="Password" value={password} setValue={setPassword} error={errors.password} type="password" maxLength={8} />
-          <Input label="Confirm Password" value={confirmpassword} setValue={setCpassword} error={errors.confirmpassword} type="password" maxLength={8} />
-          <Input
-            label="Phone"
-            value={phone}
-            setValue={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
-            error={errors.phone}
-            type="tel"
-            maxLength={10}
-          />
-        </div>
-
-        {/* BUTTON */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`mt-8 w-full py-3 rounded-lg font-semibold
-          ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"}
-          text-black transition`}
+        <form
+          onSubmit={submit}
+          className="relative z-10 w-full max-w-lg p-8 rounded-2xl
+          bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl"
         >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
-              Creating account...
-            </span>
-          ) : (
-            "Sign Up"
-          )}
-        </button>
+          <h1 className="text-3xl font-bold text-center text-white mb-6">
+            Create Account
+          </h1>
 
-        {/* 👇 YE WALA PART TERA ORIGINAL - BOTTOM LINK */}
-        <p className="text-center text-gray-300 mt-5 text-sm">
-          Already have an account?{" "}
-          <span
-            onClick={() => navigate("/login")}
-            className="text-green-400 cursor-pointer hover:underline"
+          <div className="grid md:grid-cols-2 gap-5">
+            <Input label="Name" value={name} setValue={setName} error={errors.name} />
+            <Input label="Email" value={email} setValue={setEmail} error={errors.email} type="email" />
+            <Input label="Password" value={password} setValue={setPassword} error={errors.password} type="password" maxLength={8} />
+            <Input label="Confirm Password" value={confirmpassword} setValue={setCpassword} error={errors.confirmpassword} type="password" maxLength={8} />
+            <Input
+              label="Phone"
+              value={phone}
+              setValue={(v) => setPhone(v.replace(/\D/g, "").slice(0, 10))}
+              error={errors.phone}
+              type="tel"
+              maxLength={10}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`mt-8 w-full py-3 rounded-lg font-semibold
+            ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"}
+            text-black transition`}
           >
-            Login
-          </span>
-        </p>
-      </form>
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
 
-      <style>{`
+          <p className="text-center text-gray-300 mt-5 text-sm">
+            Already have an account?{" "}
+            <span
+              onClick={() => navigate("/login")}
+              className="text-green-400 cursor-pointer hover:underline"
+            >
+              Login
+            </span>
+          </p>
+        </form>
+
+        <style>{`
 .water-drop {
   position: absolute;
   pointer-events: none;
@@ -196,13 +188,13 @@ const submit = async (e) => {
   100% { transform: scale(2.2) translateY(-90px); opacity: 0; }
 }
 `}</style>
-    </div>
-        <Footer/>
+      </div>
+
+      <Footer />
     </>
-    
   );
 }
- 
+
 function Input({ label, value, setValue, error, type = "text", maxLength }) {
   return (
     <div>
