@@ -113,7 +113,7 @@ const submit = async (e) => {
     localStorage.setItem("user", JSON.stringify(res.data));
 
     navigate("/option");
-    window.location.reload(); 
+    
   } catch (err) {
     alert(err.response?.data?.message || "Registration failed");
   } finally {
