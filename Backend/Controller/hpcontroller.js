@@ -9,7 +9,7 @@ const create = async (req, res) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
-        message: "Only @gmail.com emails are allowed",
+        message: "Please Enter a valid Email.",
       });
     }
 
@@ -32,7 +32,7 @@ const create = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
-        message: "Email already registered",
+        message: "Email already registered please sign up with another email.",
       });
     }
 
