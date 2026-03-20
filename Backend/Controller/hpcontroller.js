@@ -1,4 +1,3 @@
-
 const User = require("../model/hpmodel");
 const Progress = require("../model/progressmodel");
 
@@ -28,69 +27,6 @@ const create = async (req, res) => {
   }
 };
 
-// CHECK PROGRESS
-const checkProgress = async (req, res) => {
-  try {
-    const { email, track, level } = req.body;
-
-    const exists = await Progress.findOne({
-      where: { email, track, level },
-    });
-
-    res.json({ allowed: !exists });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// SAVE PROGRESS (🔥 DUPLICATE SAFE)
-const saveProgress = async (req, res) => {
-  try {
-    const { email, track, level, score, total } = req.body;
-
-    const exists = await Progress.findOne({
-      where: { email, track, level },
-    });
-
-    if (exists) {
-      return res.json({ message: "Already submitted" });
-    }
-
-    await Progress.create({
-      email,
-      track,
-      level,
-      score,
-      total,
-    });
-
-    res.json({ message: "Progress saved" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// HISTORY
-const getHistory = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    const data = await Progress.findAll({
-      where: { email },
-      order: [["createdAt", "DESC"]],
-    });
-
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// GET ALL
-const Findall = async (req, res) => {
-  res.json(await User.findAll());
-};
-
 // LOGIN
 const loginUser = async (req, res) => {
   try {
@@ -108,11 +44,87 @@ const loginUser = async (req, res) => {
   }
 };
 
+// CHECK PROGRESS (for a single level)
+const checkProgress = async (req, res) => {
+  try {
+    const { email, track, level } = req.body;
+
+    const exists = await Progress.findOne({
+      where: { email, track, level },
+    });
+
+    res.json({ allowed: !exists });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// SAVE PROGRESS
+const saveProgress = async (req, res) => {
+  try {
+    const { email, track, level, score, total } = req.body;
+
+    const exists = await Progress.findOne({
+      where: { email, track, level },
+    });
+
+    if (exists) {
+      return res.json({ message: "Already submitted" });
+    }
+
+    await Progress.create({ email, track, level, score, total });
+
+    res.json({ message: "Progress saved" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// GET HISTORY
+const getHistory = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const data = await Progress.findAll({
+      where: { email },
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// GET COMPLETED LEVELS FOR TRACK
+const getCompletedLevels = async (req, res) => {
+  try {
+    const { email, track } = req.body;
+
+    const data = await Progress.findAll({
+      where: { email, track },
+      attributes: ["level"],
+    });
+
+    const completedLevels = data.map((item) => item.level);
+
+    res.json({ completedLevels });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// GET ALL USERS
+const Findall = async (req, res) => {
+  res.json(await User.findAll());
+};
+
 module.exports = {
   create,
   loginUser,
   checkProgress,
   saveProgress,
   getHistory,
+  getCompletedLevels, // NEW
   Findall,
 };
