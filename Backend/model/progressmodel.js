@@ -19,3 +19,4 @@ const Progress = HP.define("progress", {
     type: DataTypes.INTEGER,
   },
 });
+module.exports = Progress;
