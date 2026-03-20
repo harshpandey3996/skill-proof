@@ -2,9 +2,9 @@ const { DataTypes } = require("sequelize");
 const HP = require("../Config/hpconfig");
 
 const User = HP.define("ayush", {
-  name: { 
-    type: DataTypes.STRING, 
-    allowNull: false 
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
 
   email: {
@@ -21,10 +21,12 @@ const User = HP.define("ayush", {
     allowNull: true,
   },
 
-  password: { 
-    type: DataTypes.STRING, 
-    allowNull: false 
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
+
+
 });
 
 module.exports = User;
