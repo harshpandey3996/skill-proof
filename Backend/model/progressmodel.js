@@ -1,22 +1,33 @@
 const { DataTypes } = require("sequelize");
 const HP = require("../Config/hpconfig");
 
+const Progress = HP.define(
+  "progress",
+  {
+    email: {
+      type: DataTypes.STRING,
+    },
+    track: {
+      type: DataTypes.STRING,
+    },
+    level: {
+      type: DataTypes.STRING,
+    },
+    score: {
+      type: DataTypes.INTEGER,
+    },
+    total: {
+      type: DataTypes.INTEGER,
+    },
+  },
+  {
+    indexes: [
+      {
+        unique: true,
+        fields: ["email", "track", "level"], // 🔥 duplicate रोक देगा
+      },
+    ],
+  }
+);
 
-const Progress = HP.define("progress", {
-  email: {
-    type: DataTypes.STRING,
-  },
-  track: {
-    type: DataTypes.STRING,
-  },
-  level: {
-    type: DataTypes.STRING,
-  },
-  score: {
-    type: DataTypes.INTEGER,
-  },
-  total: {
-    type: DataTypes.INTEGER,
-  },
-});
 module.exports = Progress;
