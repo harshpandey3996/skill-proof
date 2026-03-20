@@ -355,7 +355,7 @@ export default function DataScienceTest3() {
         </motion.div>
       </div>
 
-      <Footer />
+    
     </>
   );
 }

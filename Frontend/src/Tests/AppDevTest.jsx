@@ -326,7 +326,7 @@ export default function AppDevTest() {
         </motion.div>
       </div>
 
-      <Footer />
+      
     </>
   );
 }

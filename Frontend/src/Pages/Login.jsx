@@ -171,7 +171,7 @@ function Login({ setLogin, setUser }) {
 }
 `}</style>
     </div>
-    <Footer/>
+   
     </>
   );
 }

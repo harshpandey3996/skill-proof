@@ -188,7 +188,7 @@ export default function CyberSecurityTask() {
 
         </div>
       </div>
-      <Footer />
+     
     </>
   );
 }

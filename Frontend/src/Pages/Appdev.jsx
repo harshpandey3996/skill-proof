@@ -184,7 +184,7 @@ export default function AppDevTask() {
 
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 }

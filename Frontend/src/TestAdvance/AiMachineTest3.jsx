@@ -363,7 +363,7 @@ export default function AIMachineTest3() {
         </motion.div>
       </div>
 
-      <Footer />
+     
     </>
   );
 }

@@ -330,7 +330,7 @@ export default function WebDevelopmentTest2() {
           )}
         </motion.div>
       </div>
-      <Footer />
+      
     </>
   );
 }

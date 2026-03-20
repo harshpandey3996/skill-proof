@@ -319,7 +319,7 @@ export default function WebDevelopmentTest3() {
           )}
         </motion.div>
       </div>
-      <Footer />
+    
     </>
   );
 }

@@ -360,7 +360,7 @@ export default function CoreCSETest() {
         </motion.div>
       </div>
 
-      <Footer />
+     
     </>
   );
 }

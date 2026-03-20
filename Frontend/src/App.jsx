@@ -43,6 +43,7 @@ import CoreCSETest3 from "./TestAdvance/CoreCSETest3";
 import DataScienceTest3 from "./TestAdvance/DataScienceTest3";
 import CyberSecurityTest3 from "./TestAdvance/CyberSecurityTest3";
 import HelpCenter from "./Pages/HelpCenter";
+import History from "./Pages/History";
 
 
 function App() {
@@ -102,6 +103,7 @@ function App() {
       <Route path="/certificate" element={<Certificate />} />
       <Route path="/select-level" element={<SelectLevel />} />
       <Route path="/help-center" element={<HelpCenter />} />
+      <Route path="/history" element={<History/>} />
     </Routes>
   );
 }

@@ -359,7 +359,7 @@ export default function AIMachineTest() {
         </motion.div>
       </div>
 
-      <Footer />
+     
     </>
   );
 }

@@ -43,7 +43,7 @@ export default function Option() {
     {
       title: "Data Science",
       route: "/ds-task",
-      img: "https://th.bing.com/th/id/OIP.oqyPRoVBH5NQR1phxOG1xAHaHa",
+      img: "https://miro.medium.com/v2/resize:fit:1358/1*f-0MUEuaILWShigxdiqkjw.jpeg",
     },
     {
       title: "AI / Machine Learning",
@@ -127,7 +127,6 @@ export default function Option() {
         </div>
       </div>
 
-      <Footer />
 
       {/* WATER BUBBLE CSS */}
       <style>

@@ -351,7 +351,6 @@ export default function CoreCSETest2() {
                 </motion.div>
             </div>
 
-            <Footer />
         </>
     );
 }

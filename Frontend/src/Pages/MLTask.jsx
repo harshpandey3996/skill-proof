@@ -173,7 +173,7 @@ export default function MLTask() {
 
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 }

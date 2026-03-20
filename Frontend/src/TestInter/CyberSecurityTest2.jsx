@@ -355,7 +355,7 @@ export default function CyberSecurityTest2() {
         </motion.div>
       </div>
 
-      <Footer />
+     
     </>
   );
 }

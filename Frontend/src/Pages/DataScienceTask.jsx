@@ -187,7 +187,7 @@ export default function DataScienceTask() {
 
         </div>
       </div>
-      <Footer />
+     
     </>
   );
 }

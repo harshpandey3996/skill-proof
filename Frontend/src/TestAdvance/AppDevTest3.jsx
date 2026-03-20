@@ -366,7 +366,7 @@ export default function AppDevTest3() {
         </motion.div>
       </div>
 
-      <Footer />
+  
     </>
   );
 }

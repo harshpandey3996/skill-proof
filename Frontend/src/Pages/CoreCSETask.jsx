@@ -202,7 +202,7 @@ export default function CoreCSETask() {
 
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 }
