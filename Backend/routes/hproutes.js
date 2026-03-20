@@ -5,6 +5,9 @@ const {
   create,
   Findall,
   loginUser,
+  checkProgress,
+  saveProgress,
+  getHistory,
 } = require("../Controller/hpcontroller");
 
 
@@ -13,6 +16,9 @@ const {
 router.post("/post", create);
 router.post("/login", loginUser);
 router.get("/get", Findall);
+router.post("/check-progress", checkProgress);
+router.post("/save-progress", saveProgress);
+router.get("/history/:email", getHistory);
 
 
 
