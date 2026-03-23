@@ -4,6 +4,8 @@ import html2canvas from "html2canvas";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function Certificate() {
   const navigate = useNavigate();
@@ -70,6 +72,35 @@ export default function Certificate() {
     pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight);
     pdf.save("certificate.pdf");
   };
+
+
+  // ================= SAVE CERTIFICATE HISTORY =================
+useEffect(() => {
+  const saveCertificateHistory = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+
+      if (!userData || !userData.email) return;
+
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/save-progress`,
+        {
+          email: userData.email,
+          track: certificateType,
+          level: certificateLevel,
+          score: 1,
+          total: 1,
+        }
+      );
+
+      console.log("✅ Certificate history saved");
+    } catch (err) {
+      console.log("Already saved or error ignored");
+    }
+  };
+
+  saveCertificateHistory();
+}, [certificateType, certificateLevel]);
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f1f5f9" }}>
@@ -189,3 +220,8 @@ const btnBlue = {
   border: "none",
   cursor: "pointer",
 };
+
+
+
+
+
