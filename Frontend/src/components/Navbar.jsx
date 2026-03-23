@@ -55,6 +55,11 @@ export default function Navbar() {
                 >
                   Logout
                 </button>
+                <Link to="/history">
+                  <button className="border border-green-400 px-4 py-2 rounded-full hover:bg-green-400 hover:text-black transition">
+                    History
+                  </button>
+                </Link>
               </>
             ) : (
               <>
@@ -72,7 +77,7 @@ export default function Navbar() {
               </>
             )}
 
-            {/* ✅ Home Button (Hidden on Home Page) */}
+            
             {!isHomePage && (
               <Link to="/">
                 <button className="border border-green-400 px-4 py-2 rounded-full hover:bg-green-400 hover:text-black transition">
@@ -108,6 +113,12 @@ export default function Navbar() {
               >
                 Logout
               </button>
+
+              <Link to="/history" onClick={() => setIsOpen(false)}>
+                <button className="w-full border border-green-400 py-2 rounded-full hover:bg-green-400 hover:text-black transition">
+                  History
+                </button>
+              </Link>
             </>
           ) : (
             <>
