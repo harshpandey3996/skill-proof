@@ -50,31 +50,36 @@ function Login({ setLogin, setUser }) {
   }, []);
 
   // ================= SUBMIT =================
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (loading) return;
+ // ================= SUBMIT =================
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (loading) return;
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
-        email,
-        password,
-      });
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+      email,
+      password,
+    });
 
-      if (res.status === 200) {
-        setLogin(true);
-        setUser(res.data);
-        localStorage.setItem("token", "Hp3996@@HP");
-        localStorage.setItem("user", JSON.stringify(res.data));
-        navigate("/option");
-      }
-    } catch (err) {
-      alert("Invalid credentials or user not found!");
-    } finally {
-      setLoading(false);
+    if (res.status === 200) {
+      setLogin(true);
+      setUser(res.data);
+
+      localStorage.setItem("token", "Hp3996@@HP");
+      localStorage.setItem("user", JSON.stringify(res.data));
+
+      localStorage.setItem("email", res.data.email);
+
+      navigate("/option");
     }
-  };
+  } catch (err) {
+    alert("Invalid credentials or user not found!");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
